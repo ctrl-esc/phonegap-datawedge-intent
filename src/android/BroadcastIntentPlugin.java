@@ -36,7 +36,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	}
 	
 	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-		public void onReceive(Context context, Intent intent) {
+		public void onReceive(Context context, Intent intent, CallbackContext callbackContext) {
 		    String action = intent.getAction();
 		    Bundle b = intent.getExtras();
 		    //  This is useful for debugging to verify the format of received intents from DataWedge
@@ -55,7 +55,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		}
 	};
 	
-	private void sendScanResult(Intent initiatingIntent, String howDataReceived)
+	private void sendScanResult(Intent initiatingIntent, String howDataReceived, CallbackContext callbackContext)
 	{
 		String decodedSource = initiatingIntent.getStringExtra("com.symbol.datawedge.source");
 		String decodedData = initiatingIntent.getStringExtra("com.symbol.datawedge.data_string");
@@ -79,7 +79,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		sendUpdate(obj, false);
+		sendUpdate(obj);
 	}
 	
 
