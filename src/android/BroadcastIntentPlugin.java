@@ -36,7 +36,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	}
 	
 	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-		public void onReceive(Context context, Intent intent, CallbackContext callbackContext) {
+		public void onReceive(Context context, Intent intent) {
 		    String action = intent.getAction();
 		    Bundle b = intent.getExtras();
 		    //  This is useful for debugging to verify the format of received intents from DataWedge
@@ -47,7 +47,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		    if (action.equals("org.limitstate.datawedge.ACTION")) {
 			//  Received a barcode scan
 			try {
-			    sendScanResult(intent, "via Broadcast",callbackContext);
+			    sendScanResult(intent, "via Broadcast");
 			} catch (Exception e) {
 			    //  Catch if the UI does not exist when we receive the broadcast... this is not designed to be a production app
 			}
@@ -55,7 +55,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		}
 	};
 	
-	private void sendScanResult(Intent initiatingIntent, String howDataReceived, CallbackContext callbackContext)
+	private void sendScanResult(Intent initiatingIntent, String howDataReceived)
 	{
 		String decodedSource = initiatingIntent.getStringExtra("com.symbol.datawedge.source");
 		String decodedData = initiatingIntent.getStringExtra("com.symbol.datawedge.data_string");
@@ -83,8 +83,8 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	}
 	
 
-	private void sendUpdate(JSONObject info, CallbackContext callbackContext) {
-	   callbackContext.success(info);
+	private void sendUpdate(JSONObject info) {
+	   
 	}
 
 }
