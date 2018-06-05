@@ -35,6 +35,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
 		filter.addAction("org.limitstate.datawedge.ACTION");
 		context.registerReceiver(myBroadcastReceiver, filter);
+		return true;
 	}
 	
 	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
