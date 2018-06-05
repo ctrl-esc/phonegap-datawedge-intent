@@ -25,16 +25,13 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v7.app.AppCompatActivity;
 
 public class BroadcastIntentPlugin extends CordovaPlugin {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+	protected void onCreate() {
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
-		filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+		filter.addAction("org.limitstate.datawedge.ACTION");
 		registerReceiver(myBroadcastReceiver, filter);
 	}
 	
@@ -55,7 +52,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		    //{
 		    //    Log.v(LOG_TAG, key);
 		    //}
-		    if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+		    if (action.equals("org.limitstate.datawedge.ACTION")) {
 			//  Received a barcode scan
 			try {
 			    sendScanResult(intent, "via Broadcast");
@@ -68,15 +65,15 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	
 	private void sendScanResult(Intent initiatingIntent, String howDataReceived)
 	{
-		String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
-		String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
-		String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
+		String decodedSource = initiatingIntent.getStringExtra("com.symbol.datawedge.source");
+		String decodedData = initiatingIntent.getStringExtra("com.symbol.datawedge.data_string");
+		String decodedLabelType = initiatingIntent.getStringExtra("com.symbol.datawedge.label_type");
 
 		if (null == decodedSource)
 		{
-		    decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source_legacy));
-		    decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
-		    decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
+		    decodedSource = initiatingIntent.getStringExtra("com.motorolasolutions.emdk.datawedge.source");
+		    decodedData = initiatingIntent.getStringExtra("com.motorolasolutions.emdk.datawedge.data_string");
+		    decodedLabelType = initiatingIntent.getStringExtra("com.motorolasolutions.emdk.datawedge.label_type");
 		}
 
 		lblScanSource.setText(decodedSource + " " + howDataReceived);
