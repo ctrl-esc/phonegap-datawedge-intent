@@ -32,15 +32,9 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
 		filter.addAction("org.limitstate.datawedge.ACTION");
-		registerReceiver(myBroadcastReceiver, filter);
+		getActivity().registerReceiver(myBroadcastReceiver, filter);
 	}
 	
-	protected void onDestroy()
-	{
-		super.onDestroy();
-		unregisterReceiver(myBroadcastReceiver);
-	}
-
 	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
 		public void onReceive(Context context, Intent intent) {
 		    String action = intent.getAction();
