@@ -68,9 +68,9 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		    decodedLabelType = initiatingIntent.getStringExtra("com.motorolasolutions.emdk.datawedge.label_type");
 		}
 
-		lblScanSource.setText(decodedSource + " " + howDataReceived);
-		lblScanData.setText(decodedData);
-		lblScanLabelType.setText(decodedLabelType);
+		//lblScanSource.setText(decodedSource + " " + howDataReceived);
+		//lblScanData.setText(decodedData);
+		//lblScanLabelType.setText(decodedLabelType);
 		
 		JSONObject obj = new JSONObject();
 		try{
