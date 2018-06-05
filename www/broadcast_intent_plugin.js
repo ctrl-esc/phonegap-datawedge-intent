@@ -1,7 +1,7 @@
 var cordova = require('cordova');
 var exec = require('cordova/exec');
 
-var HoneywellScannerPlugin = function() {
+var BroadcastIntentPlugin = function() {
 
   this.scan = function(success_cb, error_cb){
     exec(success_cb, error_cb, "BarcodeScannerPlugin", "scan", []);
@@ -13,5 +13,5 @@ var HoneywellScannerPlugin = function() {
 
 };
 
-var honeywellScannerPlugin = new HoneywellScannerPlugin();
-module.exports = honeywellScannerPlugin;
+var broadcastIntentPlugin = new BroadcastIntentPlugin();
+module.exports = broadcastIntentPlugin;
