@@ -27,8 +27,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 public class BroadcastIntentPlugin extends CordovaPlugin {
+	CallbackContext pluginCallbackContext = null;
 	
 	protected void onCreate(Context context, CallbackContext callbackContext) {
+		this.pluginCallbackContext = callbackContext;
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
 		filter.addAction("org.limitstate.datawedge.ACTION");
@@ -84,7 +86,11 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	
 
 	private void sendUpdate(JSONObject info) {
-	   
+	   if (this.pluginCallbackContext != null) {
+			PluginResult result = new PluginResult(PluginResult.Status.OK, info);
+			result.setKeepCallback(true);
+			this.pluginCallbackContext.sendPluginResult(result);
+		}
 	}
 
 }
