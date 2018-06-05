@@ -28,7 +28,7 @@ import android.content.IntentFilter;
 
 public class BroadcastIntentPlugin extends CordovaPlugin {
 	
-	protected void onCreate(Context context) {
+	protected void onCreate(Context context, CallbackContext callbackContext) {
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
 		filter.addAction("org.limitstate.datawedge.ACTION");
@@ -47,7 +47,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		    if (action.equals("org.limitstate.datawedge.ACTION")) {
 			//  Received a barcode scan
 			try {
-			    sendScanResult(intent, "via Broadcast");
+			    sendScanResult(intent, "via Broadcast",callbackContext);
 			} catch (Exception e) {
 			    //  Catch if the UI does not exist when we receive the broadcast... this is not designed to be a production app
 			}
@@ -84,7 +84,7 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	
 
 	private void sendUpdate(JSONObject info, CallbackContext callbackContext) {
-	   callbackContext.success();
+	   callbackContext.success(info);
 	}
 
 }
