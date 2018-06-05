@@ -1,46 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" 
-	id="org.limitstate.honeywell_scanner_plugin" 
+	id="org.limitstate.BroadcastIntentPlugin" 
 	version="0.0.5">
 
-	<name>Honeywell Barcode Scanner Plugin</name>
-	<description>Honeywell Barcode Scanner Plugin</description>
+	<name>Zebra TC20 Datawedge Receiver</name>
+	<description>Receives broadcast intent.</description>
 	<license>Apache 2.0</license>
-	<keywords>cordova, honeywell, dolphin, scanner, plugin</keywords>
+	<keywords>cordova, zebra, tc20, intent, scanner, plugin</keywords>
 
-	<js-module src="www/honeywell_scanner_plugin.js" name="HoneywellScannerPlugin">
-		<clobbers target="navigator.honeywell_scanner_plugin" />
+	<js-module src="www/broadcast_intent_plugin.js" name="BroadcastIntentPlugin">
+		<clobbers target="navigator.broadcast_intent_plugin" />
 	</js-module>
 
 	<!-- android -->
 	<platform name="android">
 		<config-file target="AndroidManifest.xml" parent="/*">
-			<uses-permission android:name="android.permission.CAMERA" />
-			<uses-permission android:name="android.permission.FLASHLIGHT" />
-			<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-			<uses-permission android:name="android.permission.INTERNET" />
-			<uses-permission android:name="android.permission.READ_LOGS" />
-			<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-			<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-			<uses-permission android:name="android.permission.VIBRATE" />
-			<uses-permission android:name="android.permission.NFC" />
-
-			<uses-feature android:name="android.hardware.camera" />
-			<uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
-			<uses-feature android:name="android.hardware.camera.flash" android:required="false" />
+			
 		</config-file>
 
 		<config-file target="res/xml/config.xml" parent="/*">
-			<feature name="BarcodeScannerPlugin">
-				<param name="android-package" value="org.limitstate.honeywell.BarcodeScannerPlugin" />
+			<feature name="BroadcastIntentPlugin">
+				<param name="android-package" value="org.limitstate.BroadcastIntentPlugin" />
 			</feature>
 		</config-file>
 
-		<source-file src="src/android/libs/gson-2.2.4.jar" target-dir="libs" />
-		<source-file src="src/android/libs/honeywell.jar" target-dir="libs" />
-
-		<source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/org/limitstate/honeywell" />
+		<source-file src="src/android/BarcodeScannerPlugin.java" target-dir="src/org/limitstate/intent" />
 	</platform>
 
 </plugin>
