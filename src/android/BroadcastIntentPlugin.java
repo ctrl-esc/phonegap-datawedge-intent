@@ -87,11 +87,12 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	
 
 	private void sendUpdate(JSONObject info) {
-	   if (this.pluginCallbackContext != null) {
+		pluginCallbackContext.success(info);
+	   /*if (this.pluginCallbackContext != null) {
 			PluginResult result = new PluginResult(PluginResult.Status.OK, info);
 			result.setKeepCallback(true);
 			this.pluginCallbackContext.sendPluginResult(result);
-		}
+		}*/
 	}
 
 }
