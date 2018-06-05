@@ -29,7 +29,7 @@ import android.content.IntentFilter;
 public class BroadcastIntentPlugin extends CordovaPlugin {
 	CallbackContext pluginCallbackContext = null;
 	
-	protected void onCreate(Context context, CallbackContext callbackContext) {
+	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.pluginCallbackContext = callbackContext;
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
