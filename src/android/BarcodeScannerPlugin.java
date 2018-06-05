@@ -27,7 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 public class BroadcastIntentPlugin extends CordovaPlugin {
-	@Override
+	
 	protected void onCreate() {
 		IntentFilter filter = new IntentFilter();
 		filter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -35,7 +35,6 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 		registerReceiver(myBroadcastReceiver, filter);
 	}
 	
-	@Override
 	protected void onDestroy()
 	{
 		super.onDestroy();
@@ -43,7 +42,6 @@ public class BroadcastIntentPlugin extends CordovaPlugin {
 	}
 
 	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
-		@Override
 		public void onReceive(Context context, Intent intent) {
 		    String action = intent.getAction();
 		    Bundle b = intent.getExtras();
