@@ -1,4 +1,4 @@
-package org.limitstate.honeywell;
+package org.limitstate.intent;
 
 import android.util.Log;
 
@@ -25,89 +25,74 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v7.app.AppCompatActivity;
 
-import com.honeywell.decodemanager.DecodeManager;
-import com.honeywell.decodemanager.SymbologyConfigs;
-import com.honeywell.decodemanager.barcode.DecodeResult;
-import com.honeywell.decodemanager.barcode.CommonDefine;
-
-public class BarcodeScannerPlugin extends CordovaPlugin {
-
-	private static final String LOG_TAG = "BarcodeScannerPlugin";
-	private static final int SCANTIMEOUT = 2000;
-
-	DecodeManager decodeManager = null;
-	BroadcastReceiver scannerReceiver = null;
-	CallbackContext pluginCallbackContext = null;
-
-	public BarcodeScannerPlugin() {
-	}
-
+public class BroadcastIntentPlugin extends CordovaPlugin {
 	@Override
-	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
-		if (action.equals("scan")) {
-			this.pluginCallbackContext = callbackContext;
-
-			if ((decodeManager == null) && (Build.MODEL.toLowerCase().contains("dolphin 70e".toLowerCase()))) {
-				decodeManager = new DecodeManager(((CordovaActivity)this.cordova.getActivity()), ScanResultHandler);
-			}
-			try{
-				// All symbologies enabled
-				decodeManager.enableSymbology(CommonDefine.SymbologyID.SYM_ALL);
-			}
-			catch (RemoteException e) {
-				e.printStackTrace();
-			}
-			try {
-				this.doScan();
-				return true;
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if (action.equals("stop")) {
-			callbackContext.success("stopped");
-			return true;
-		}
-		return false;
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		
+		IntentFilter filter = new IntentFilter();
+		filter.addCategory(Intent.CATEGORY_DEFAULT);
+		filter.addAction(getResources().getString(R.string.activity_intent_filter_action));
+		registerReceiver(myBroadcastReceiver, filter);
+	}
+	
+	@Override
+	protected void onDestroy()
+	{
+		super.onDestroy();
+		unregisterReceiver(myBroadcastReceiver);
 	}
 
-	private Handler ScanResultHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case DecodeManager.MESSAGE_DECODER_COMPLETE:
-				DecodeResult decodeResult = (DecodeResult) msg.obj;
-				JSONObject obj = new JSONObject();
-				try{
-					obj.put("barcode", decodeResult.barcodeData);
-					obj.put("codeID", decodeResult.codeId);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				sendUpdate(obj, false);
-				pluginCallbackContext.success("done");
-				break;
-			case DecodeManager.MESSAGE_DECODER_FAIL: 
-				break;
-			case DecodeManager.MESSAGE_DECODER_READY: 
-				ArrayList<java.lang.Integer> arry = decodeManager.getSymConfigActivityOpeartor().getAllSymbologyId();
-				boolean b = arry.isEmpty();
-				break;
-			default:
-				super.handleMessage(msg);
-				break;
+	private BroadcastReceiver myBroadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+		    String action = intent.getAction();
+		    Bundle b = intent.getExtras();
+		    //  This is useful for debugging to verify the format of received intents from DataWedge
+		    //for (String key : b.keySet())
+		    //{
+		    //    Log.v(LOG_TAG, key);
+		    //}
+		    if (action.equals(getResources().getString(R.string.activity_intent_filter_action))) {
+			//  Received a barcode scan
+			try {
+			    sendScanResult(intent, "via Broadcast");
+			} catch (Exception e) {
+			    //  Catch if the UI does not exist when we receive the broadcast... this is not designed to be a production app
 			}
+		    }
 		}
 	};
+	
+	private void sendScanResult(Intent initiatingIntent, String howDataReceived)
+	{
+		String decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source));
+		String decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data));
+		String decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type));
 
-	private void doScan() throws Exception {
-		try {
-			decodeManager.doDecode(SCANTIMEOUT);
-		} catch (RemoteException e) {
+		if (null == decodedSource)
+		{
+		    decodedSource = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_source_legacy));
+		    decodedData = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_data_legacy));
+		    decodedLabelType = initiatingIntent.getStringExtra(getResources().getString(R.string.datawedge_intent_key_label_type_legacy));
+		}
+
+		lblScanSource.setText(decodedSource + " " + howDataReceived);
+		lblScanData.setText(decodedData);
+		lblScanLabelType.setText(decodedLabelType);
+		
+		JSONObject obj = new JSONObject();
+		try{
+			obj.put("barcode", decodedData);
+			obj.put("codeType", decodedLabelType);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		sendUpdate(obj, false);
 	}
+	
 
 	private void sendUpdate(JSONObject info, boolean keepCallback) {
 	    if (this.pluginCallbackContext != null) {
